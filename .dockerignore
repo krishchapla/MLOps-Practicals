@@ -1,0 +1,11 @@
+venv/
+.venv/
+__pycache__/
+.git/
+.pytest_cache/
+.env
+*.pem
+*.key
+.ipynb_checkpoints/
+*.ipynb
+.DS_Store

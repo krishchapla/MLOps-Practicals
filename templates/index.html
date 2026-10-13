@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Student Marks Predictor | MLOps</title>
+  <meta name="description" content="Predict student exam marks using a Linear Regression ML model trained on study habits and academic history." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+</head>
+<body>
+
+  <!-- Background blobs -->
+  <div class="blob blob-1"></div>
+  <div class="blob blob-2"></div>
+
+  <div class="container">
+
+    <!-- ── Header ── -->
+    <header class="header">
+      <div class="header-badge">🤖 MLOps Practical 1</div>
+      <h1 class="header-title">Student Marks <span class="gradient-text">Predictor</span></h1>
+      <p class="header-sub">Linear Regression · Flask · Scikit-learn</p>
+    </header>
+
+    <!-- ── Flash errors ── -->
+    {% if error %}
+    <div class="alert alert-error">
+      <span class="alert-icon">⚠️</span>
+      <span>{{ error }}</span>
+    </div>
+    {% endif %}
+
+    <!-- ── Result card ── -->
+    {% if prediction is defined and prediction is not none %}
+    <div class="result-card">
+      <div class="result-header">🎯 Prediction Result</div>
+      <div class="result-score">{{ prediction }}<span class="result-unit"> / 100</span></div>
+      <div class="result-grade grade-{{ grade }}">Grade: {{ grade }}</div>
+      <div class="result-inputs">
+        <p>📚 Hours Studied: <b>{{ inputs.hours_studied }}</b> &nbsp;|&nbsp;
+           📊 Previous Score: <b>{{ inputs.previous_scores }}</b> &nbsp;|&nbsp;
+           🏃 Extracurricular: <b>{{ 'Yes' if inputs.extracurricular == 1 else 'No' }}</b></p>
+        <p>😴 Sleep Hours: <b>{{ inputs.sleep_hours }}</b> &nbsp;|&nbsp;
+           📝 Practice Papers: <b>{{ inputs.practice_papers }}</b></p>
+      </div>
+    </div>
+    {% endif %}
+
+    <div class="main-grid">
+
+      <!-- ── Form card ── -->
+      <div class="card">
+        <div class="card-header">
+          <span class="card-icon">📋</span>
+          <h2 class="card-title">Student Details</h2>
+        </div>
+
+        <form method="POST" action="/predict" class="form" id="predict-form">
+
+          <div class="form-group">
+            <label for="hours_studied">📚 Hours Studied per Day</label>
+            <div class="input-wrap">
+              <input type="number" id="hours_studied" name="hours_studied"
+                     min="0" max="24" step="0.5" placeholder="e.g. 5"
+                     value="{{ inputs.hours_studied if inputs else '' }}" required />
+              <span class="input-unit">hrs</span>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="previous_scores">📊 Previous Exam Score</label>
+            <div class="input-wrap">
+              <input type="number" id="previous_scores" name="previous_scores"
+                     min="0" max="100" step="0.1" placeholder="e.g. 72"
+                     value="{{ inputs.previous_scores if inputs else '' }}" required />
+              <span class="input-unit">/ 100</span>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="extracurricular">🏃 Extracurricular Activities</label>
+            <select id="extracurricular" name="extracurricular" required>
+              <option value="" disabled {% if not inputs %}selected{% endif %}>-- Select --</option>
+              <option value="1" {% if inputs and inputs.extracurricular == 1 %}selected{% endif %}>Yes</option>
+              <option value="0" {% if inputs and inputs.extracurricular == 0 %}selected{% endif %}>No</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="sleep_hours">😴 Sleep Hours per Night</label>
+            <div class="input-wrap">
+              <input type="number" id="sleep_hours" name="sleep_hours"
+                     min="0" max="24" step="0.5" placeholder="e.g. 7"
+                     value="{{ inputs.sleep_hours if inputs else '' }}" required />
+              <span class="input-unit">hrs</span>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="practice_papers">📝 Practice Papers Attempted</label>
+            <div class="input-wrap">
+              <input type="number" id="practice_papers" name="practice_papers"
+                     min="0" max="10" step="1" placeholder="e.g. 4"
+                     value="{{ inputs.practice_papers if inputs else '' }}" required />
+              <span class="input-unit">/ 10</span>
+            </div>
+          </div>
+
+          <button type="submit" class="btn-predict" id="submit-btn">
+            <span class="btn-text">🔮 Predict Marks</span>
+            <span class="btn-loader" id="loader" style="display:none;">⏳ Predicting…</span>
+          </button>
+
+        </form>
+      </div>
+
+      <!-- ── Info card ── -->
+      <div class="card card-info">
+        <div class="card-header">
+          <span class="card-icon">ℹ️</span>
+          <h2 class="card-title">About This Model</h2>
+        </div>
+        <ul class="info-list">
+          <li><span class="info-tag">Algorithm</span> Linear Regression</li>
+          <li><span class="info-tag">Framework</span> Scikit-learn Pipeline</li>
+          <li><span class="info-tag">Preprocessing</span> Standard Scaler</li>
+          <li><span class="info-tag">Features</span> 5 input variables</li>
+          <li><span class="info-tag">Output</span> Marks (0 – 100)</li>
+        </ul>
+
+        <div class="grade-legend">
+          <div class="grade-legend-title">Grade Scale</div>
+          <div class="grade-row"><span class="badge grade-A+">A+</span><span>90 – 100</span></div>
+          <div class="grade-row"><span class="badge grade-A">A</span><span>80 – 89</span></div>
+          <div class="grade-row"><span class="badge grade-B">B</span><span>70 – 79</span></div>
+          <div class="grade-row"><span class="badge grade-C">C</span><span>60 – 69</span></div>
+          <div class="grade-row"><span class="badge grade-D">D</span><span>50 – 59</span></div>
+          <div class="grade-row"><span class="badge grade-F">F</span><span>Below 50</span></div>
+        </div>
+
+        <div class="api-box">
+          <div class="api-title">🔗 REST API Endpoint</div>
+          <code>POST /api/predict</code>
+          <pre class="api-sample">{
+  "hours_studied": 6,
+  "previous_scores": 78,
+  "extracurricular": 1,
+  "sleep_hours": 7,
+  "practice_papers": 5
+}</pre>
+        </div>
+      </div>
+
+    </div><!-- /main-grid -->
+
+    <!-- ── Footer ── -->
+    <footer class="footer">
+      <p>Student Marks Predictor · MLOps Practical 1 · Linear Regression</p>
+    </footer>
+
+  </div><!-- /container -->
+
+  <script>
+    document.getElementById("predict-form").addEventListener("submit", () => {
+      document.querySelector(".btn-text").style.display = "none";
+      document.getElementById("loader").style.display  = "inline";
+    });
+  </script>
+
+</body>
+</html>

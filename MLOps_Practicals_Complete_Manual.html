@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>MLOps Practicals 1-4 Complete Lab Manual & Terminal Outputs</title>
+  <style>
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; background: #0f172a; color: #f1f5f9; line-height: 1.6; margin: 0; padding: 2rem; }
+    .container { max-width: 960px; margin: 0 auto; background: #1e293b; padding: 2.5rem 3rem; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); border: 1px solid #334155; }
+    h1.doc-title { font-size: 2.2rem; color: #38bdf8; text-align: center; margin-bottom: 0.2rem; border-bottom: 2px solid #38bdf8; padding-bottom: 0.8rem; }
+    p.subtitle { text-align: center; color: #94a3b8; font-style: italic; margin-bottom: 2.5rem; }
+    h2.practical-title { font-size: 1.6rem; color: #60a5fa; border-left: 4px solid #60a5fa; padding-left: 12px; margin-top: 2.5rem; margin-bottom: 1rem; }
+    h3.step-title { font-size: 1.2rem; color: #34d399; margin-top: 1.8rem; margin-bottom: 0.5rem; }
+    .aim-box { background: rgba(56, 189, 248, 0.1); border-left: 4px solid #38bdf8; padding: 10px 16px; border-radius: 4px; margin: 12px 0; }
+    .code-box { background: #090d16; color: #f8fafc; font-family: Consolas, monospace; font-size: 0.95rem; padding: 10px 14px; border-radius: 6px; border: 1px solid #1e293b; margin: 8px 0; overflow-x: auto; }
+    .figure-box { text-align: center; margin: 1.5rem 0; background: #0b0f19; padding: 12px; border-radius: 8px; border: 1px solid #334155; }
+    .figure-box img { max-width: 100%; border-radius: 6px; box-shadow: 0 4px 12px rgba(0,0,0,0.4); display: block; margin: 0 auto; }
+    .figure-caption { font-size: 0.88rem; color: #94a3b8; font-style: italic; margin-top: 8px; font-weight: 600; }
+  </style>
+</head>
+<body>
+<div class="container">
+  <h1 class="doc-title">MLOps Practical Manual & Command-Line Report</h1>
+  <p class="subtitle">Practicals 1 to 4: Model Conversion, Dockerization, AWS EC2 & GCP Cloud Deployment</p>
+
+<h2 class="practical-title">PRACTICAL 1</h2>
+<p>Converting a Machine Learning Notebook into a Flask ML System</p>
+<div class="aim-box"><b>AIM:</b> To convert a machine learning model developed in a Jupyter Notebook (.ipynb) into a structured, modular, and deployable Flask-based machine learning application with model serialization, input validation, prediction functionality, and a web interface.</div>
+<p>Requirements</p>
+<p>•	Python 3.10 or 3.11</p>
+<p>•	Jupyter Notebook or Google Colab</p>
+<p>•	VS Code or another Python IDE</p>
+<p>•	Flask, Scikit-learn, Pandas, NumPy, Joblib and pytest</p>
+<p>ML system architecture</p>
+<p>Notebook / training script → trained model pipeline → model.pkl → Flask routes and validation → web interface and REST API.</p>
+<h3 class="step-title">Step 1 - Create the environment</h3>
+<div class="code-box"><code>mkdir <Project name></code></div>
+<div class="code-box"><code>cd <Project name></code></div>
+<div class="code-box"><code>python -m venv venv</code></div>
+<p>.\venv\Scripts\Activate.ps1</p>
+<div class="code-box"><code>pip install flask scikit-learn pandas numpy joblib pytest</code></div>
+<div class="code-box"><code>pip install gunicorn</code></div>
+<div class="code-box"><code>pip freeze > requirements.txt</code></div>
+
+  <div class="figure-box">
+    <img src="screenshots/p1_ss1_env_setup.png" alt="Project folder, activated virtual environment and successful dependency installation." />
+    <div class="figure-caption">Figure 1: Project folder, activated virtual environment and successful dependency installation.</div>
+  </div>
+
+<p>Project folder, activated virtual environment and successful dependency installation.</p>
+<h3 class="step-title">Step 2 - Train and serialize the model</h3>
+<p>If a suitable fitted pipeline already exists in your notebook, reuse it and preserve its preprocessing steps. Otherwise, create train_model.py.</p>
+<p>Expected: the program prints evaluation metrics and creates model.pkl. Metrics vary with the generated data and training process.</p>
+
+  <div class="figure-box">
+    <img src="screenshots/p1_ss2_train_model.png" alt="Training output, evaluation metrics and model.pkl created successfully." />
+    <div class="figure-caption">Figure 2: Training output, evaluation metrics and model.pkl created successfully.</div>
+  </div>
+
+<p>Training output, evaluation metrics and model.pkl created successfully.</p>
+<h3 class="step-title">Step 3 — Create the project structure</h3>
+<p>Project File Structure :</p>
+<p>For example (Replace it with your project):</p>
+<p>mlops-house-price/</p>
+<p>├── app.py</p>
+<p>├── train_model.py</p>
+<p>├── model.pkl</p>
+<p>├── requirements.txt</p>
+<p>├── .gitignore</p>
+<p>├── Dockerfile</p>
+<p>├── README.md</p>
+<p>├── templates/</p>
+<p>│   └── index.html</p>
+<p>├── static/</p>
+<p>│   └── style.css</p>
+<p>└── tests/</p>
+<p>└── test_app.py</p>
+<h3 class="step-title">Step 4 - Develop app.py</h3>
+<p>Code – app.py</p>
+<p>(Create atleast 3 routes. / , /health , /prediction , etc.)</p>
+<h3 class="step-title">Step 5 – HTML\CSS interface</h3>
+<p>(Create Basic UI)</p>
+<h3 class="step-title">Step 7 - Run and test the application</h3>
+<div class="code-box"><code>python app.py</code></div>
+<p># Open http://127.0.0.1:5000</p>
+<div class="code-box"><code>curl http://127.0.0.1:5000/health</code></div>
+
+  <div class="figure-box">
+    <img src="screenshots/p1_ss3_flask_run.png" alt="Running Flask web interface showing server output and endpoints." />
+    <div class="figure-caption">Figure 3: Running Flask web interface showing server output and endpoints.</div>
+  </div>
+
+<p>Running Flask web interface showing the property input form.</p>
+
+  <div class="figure-box">
+    <img src="screenshots/p1_ss4_prediction_web.png" alt="Prediction result handled via web interface endpoint." />
+    <div class="figure-caption">Figure 4: Prediction result handled via web interface endpoint.</div>
+  </div>
+
+<p>Prediction result displayed in the web interface.</p>
+
+  <div class="figure-box">
+    <img src="screenshots/p1_ss5_health_api.png" alt="Successful health check and prediction API JSON response." />
+    <div class="figure-caption">Figure 5: Successful health check and prediction API JSON response.</div>
+  </div>
+
+<p>Successful health check and prediction API JSON response.</p>
+<h3 class="step-title">Step 8 - Create .gitignore</h3>
+<p>For example :</p>
+<p>venv/</p>
+<p>.venv/</p>
+<p>__pycache__/</p>
+<p>*.py[cod]</p>
+<p>.pytest_cache/</p>
+<p>.env</p>
+<p>*.pem</p>
+<h2 class="practical-title">PRACTICAL 2</h2>
+<p>Dockerizing the Machine Learning System</p>
+<div class="aim-box"><b>AIM:</b> To create a Dockerfile for the Flask-based machine learning application, build a Docker image, run the image as a container, and verify the application’s functionality in an isolated and reproducible environment.</div>
+<p>Requirements</p>
+<p>•	Completed Practical 1 project</p>
+<p>•	Docker Desktop or Docker Engine installed and running</p>
+<p>•	Flask application and model artifact available</p>
+<h3 class="step-title">Step 1 — Understand Docker</h3>
+<p>Dockerfile: instructions for building an image. Docker image: packaged application, model and dependencies. Docker container: a running or stopped instance of an image.</p>
+<h3 class="step-title">Step 2 — Create the Dockerfile</h3>
+<h3 class="step-title">Step 3 — Create .dockerignore</h3>
+<p>For example(Replace it if needed):</p>
+<p>venv/</p>
+<p>.venv/</p>
+<p>__pycache__/</p>
+<p>.git/</p>
+<p>.pytest_cache/</p>
+<p>.env</p>
+<p>*.pem</p>
+<p>.ipynb_checkpoints/</p>
+<h3 class="step-title">Step 4 - Build the image</h3>
+<div class="code-box"><code>docker --version</code></div>
+<div class="code-box"><code>docker info</code></div>
+
+  <div class="figure-box">
+    <img src="screenshots/p2_ss1_docker_build.png" alt="Successful Docker image build output." />
+    <div class="figure-caption">Figure 6: Successful Docker image build output.</div>
+  </div>
+
+<p>Successful Docker image build output.</p>
+<div class="code-box"><code>docker build -t <tag>:1.0 .</code></div>
+<div class="code-box"><code>docker images</code></div>
+
+  <div class="figure-box">
+    <img src="screenshots/p2_ss2_docker_images.png" alt="docker images output verifying student-marks:1.0 image." />
+    <div class="figure-caption">Figure 7: docker images output verifying student-marks:1.0 image.</div>
+  </div>
+
+<div class="code-box"><code>docker images output</code></div>
+<h3 class="step-title">Step 5 - Run the container</h3>
+<div class="code-box"><code>docker run -d --name <name> -p 5000:5000 <tag>:1.0</code></div>
+<div class="code-box"><code>docker ps</code></div>
+<div class="code-box"><code>docker logs <name></code></div>
+<p>Open http://localhost:5000 and test a prediction.</p>
+
+  <div class="figure-box">
+    <img src="screenshots/p2_ss3_docker_ps.png" alt="docker ps and docker logs output showing the running container." />
+    <div class="figure-caption">Figure 8: docker ps and docker logs output showing the running container.</div>
+  </div>
+
+<div class="code-box"><code>docker ps output showing the running container.</code></div>
+
+  <div class="figure-box">
+    <img src="screenshots/p2_ss4_docker_access.png" alt="Flask application accessed through the Docker container via curl." />
+    <div class="figure-caption">Figure 9: Flask application accessed through the Docker container via curl.</div>
+  </div>
+
+<p>Flask application accessed through the Docker container.</p>
+<h3 class="step-title">Step 6 — Test, stop and remove the container</h3>
+<div class="code-box"><code>curl http://localhost:5000/health</code></div>
+<div class="code-box"><code>docker inspect house-price-app</code></div>
+<div class="code-box"><code>docker stop house-price-app</code></div>
+<div class="code-box"><code>docker start house-price-app</code></div>
+<div class="code-box"><code>docker rm -f house-price-app</code></div>
+<h2 class="practical-title">PRACTICAL 3</h2>
+<p>Deploying the Dockerized ML System on AWS EC2</p>
+<div class="aim-box"><b>AIM:</b> To deploy the Dockerized machine learning application on an Amazon EC2 virtual machine by configuring an instance, networking and security rules, installing Docker, transferring the application image, and verifying remote access to the deployed system.</div>
+<p>Requirements</p>
+<p>•	AWS account with EC2 permissions</p>
+<p>•	Docker image from Practical 2</p>
+<p>•	SSH client and a secure key pair</p>
+<p>•	Small Ubuntu EC2 instance appropriate for the application</p>
+<h3 class="step-title">Step 1 - Select AWS region</h3>
+<p>1.	Open https://console.aws.amazon.com/ and sign in.</p>
+<p>2.	Open EC2 and select a region, for example Asia Pacific (Mumbai), ap-south-1.</p>
+<p>3.	Open the EC2 dashboard.</p>
+<h3 class="step-title">Step 2 - Launch an EC2 instance</h3>
+<p>4.	Select Launch instance and enter mlops-house-price-server as the name.</p>
+<p>5.	Choose an Ubuntu Server LTS AMI.</p>
+<p>6.	Select a small general-purpose instance type compatible with the application and account quota.</p>
+<p>7.	Create or select an SSH key pair and securely store the private key.</p>
+<p>8.	Configure the security group and storage, review settings, and launch the instance.</p>
+
+  <div class="figure-box">
+    <img src="screenshots/p3_ss1_ec2_launch.png" alt="EC2 launch configuration showing instance name, Ubuntu AMI, instance type and key pair." />
+    <div class="figure-caption">Figure 10: EC2 launch configuration showing instance name, Ubuntu AMI, instance type and key pair.</div>
+  </div>
+
+<p>EC2 launch configuration showing instance name, Ubuntu AMI, instance type and key pair.</p>
+<h3 class="step-title">Step 3 - Configure the security group</h3>
+<p>Rule	Port	Source	Purpose</p>
+<p>SSH	22	Your public IP /32	Remote administration</p>
+<p>Custom TCP	5000	Trusted client range; 0.0.0.0/0 only if public lab access is required	Application access</p>
+
+  <div class="figure-box">
+    <img src="screenshots/p3_ss2_ec2_sg.png" alt="EC2 security group inbound rules allowing ports 22 and 5000." />
+    <div class="figure-caption">Figure 11: EC2 security group inbound rules allowing ports 22 and 5000.</div>
+  </div>
+
+<p>EC2 security group inbound rules.</p>
+<h3 class="step-title">Step 4 - Connect by SSH</h3>
+<div class="code-box"><code>ssh -i <keyname>.pem ubuntu@YOUR_EC2_PUBLIC_IP</code></div>
+<p>Replace YOUR_EC2_PUBLIC_IP with the actual address shown in the console.</p>
+
+  <div class="figure-box">
+    <img src="screenshots/p3_ss3_ssh_connect.png" alt="Successful SSH connection to the Ubuntu instance." />
+    <div class="figure-caption">Figure 12: Successful SSH connection to the Ubuntu instance.</div>
+  </div>
+
+<p>Successful SSH connection to the Ubuntu instance.</p>
+<h3 class="step-title">Step 5 – Check\Install and Login Docker</h3>
+<div class="code-box"><code>sudo apt update</code></div>
+<div class="code-box"><code>sudo docker --version</code></div>
+<div class="code-box"><code>sudo docker info</code></div>
+<div class="code-box"><code>docker login -u <your_username></code></div>
+<p>If not installed;</p>
+<div class="code-box"><code>sudo apt install -y docker.io</code></div>
+<div class="code-box"><code>sudo systemctl enable --now docker</code></div>
+
+  <div class="figure-box">
+    <img src="screenshots/p3_ss4_docker_install.png" alt="Docker installed and active on AWS EC2." />
+    <div class="figure-caption">Figure 13: Docker installed and active on AWS EC2.</div>
+  </div>
+
+<p>Docker installed successfully on EC2.</p>
+<h3 class="step-title">Step 6 - Transfer the Project files to EC2 instance</h3>
+<p>On your local machine</p>
+<div class="code-box"><code>scp -i <key>.pem <files> ubuntu@YOUR_EC2_PUBLIC_IP:/home/ubuntu/</code></div>
+
+  <div class="figure-box">
+    <img src="screenshots/p3_ss5_transfer_files.png" alt="Project files transferred and loaded successfully on EC2 via SCP." />
+    <div class="figure-caption">Figure 14: Project files transferred and loaded successfully on EC2 via SCP.</div>
+  </div>
+
+<p>Docker image loaded successfully on EC2.</p>
+<h3 class="step-title">Step 7 — Build Images and Start the container</h3>
+<div class="code-box"><code>sudo docker build -t <tag>:1.0 .</code></div>
+<div class="code-box"><code>sudo docker images</code></div>
+<div class="code-box"><code>sudo docker run -d \</code></div>
+<p>--name <name> \</p>
+<p>--restart unless-stopped \</p>
+<p>-p 5000:5000 \</p>
+<p><tag>:1.0</p>
+<div class="code-box"><code>sudo docker ps</code></div>
+<div class="code-box"><code>sudo docker logs house-price-app</code></div>
+
+  <div class="figure-box">
+    <img src="screenshots/p3_ss6_docker_run_ec2.png" alt="Running application container and images on EC2." />
+    <div class="figure-caption">Figure 15: Running application container and images on EC2.</div>
+  </div>
+
+<p>Running application container\Images on EC2.</p>
+<h3 class="step-title">Step 8 — Verify remote access</h3>
+<p>Open http://YOUR_EC2_PUBLIC_IP:5000 and http://YOUR_EC2_PUBLIC_IP:5000/health. Replace the placeholder with the actual public IPv4 address.</p>
+<p>If the page does not open, check instance status, security group rules, docker ps, docker logs house-price-app, and whether the app listens on 0.0.0.0:5000 inside the container.</p>
+
+  <div class="figure-box">
+    <img src="screenshots/p3_ss7_verify_ec2.png" alt="Deployed application verified through EC2 public IP." />
+    <div class="figure-caption">Figure 16: Deployed application verified through EC2 public IP.</div>
+  </div>
+
+<p>Deployed application opened through the EC2 public IP.</p>
+
+  <div class="figure-box">
+    <img src="screenshots/p3_ss8_predict_ec2.png" alt="Successful prediction through the AWS EC2 deployment." />
+    <div class="figure-caption">Figure 17: Successful prediction through the AWS EC2 deployment.</div>
+  </div>
+
+<p>Successful prediction through the AWS deployment.</p>
+<h2 class="practical-title">PRACTICAL 4</h2>
+<p>Deploying the Same ML System on Google Cloud Platform</p>
+<div class="aim-box"><b>AIM:</b> To deploy the same Dockerized machine learning application on Google Cloud Platform by creating a Compute Engine virtual machine, configuring network access, installing Docker, importing the existing image, and validating the deployed application’s prediction functionality.</div>
+<p>Requirements</p>
+<p>•	Google account and GCP project</p>
+<p>•	Billing account linked where required</p>
+<p>•	Docker image from Practical 2</p>
+<p>•	Permissions to create Compute Engine instances and firewall rules</p>
+<h3 class="step-title">Step 1 — Create a GCP project</h3>
+<p>1.	Open https://console.cloud.google.com/ and sign in.</p>
+<p>2.	Open the project selector and select New Project.</p>
+<p>3.	Name the project <Project Name> and create it.</p>
+<p>4.	Link an eligible billing account if prompted; review pricing and available credits.</p>
+
+  <div class="figure-box">
+    <img src="screenshots/p4_ss1_gcp_project.png" alt="Newly created GCP project verified in Google Cloud Shell." />
+    <div class="figure-caption">Figure 18: Newly created GCP project verified in Google Cloud Shell.</div>
+  </div>
+
+<p>Newly created GCP project.</p>
+<h3 class="step-title">Step 2 — Enable Compute Engine</h3>
+<p>5.	Open Navigation Menu → Compute Engine → VM instances.</p>
+<p>6.	Enable the Compute Engine API if requested and wait for initialization.</p>
+
+  <div class="figure-box">
+    <img src="screenshots/p4_ss2_gcp_compute.png" alt="Compute Engine API enabled with active project configuration." />
+    <div class="figure-caption">Figure 19: Compute Engine API enabled with active project configuration.</div>
+  </div>
+
+<p>Compute Engine dashboard with the correct project selected.</p>
+<h3 class="step-title">Step 3 — Create the virtual machine</h3>
+<p>7.	Select Create instance and name it.</p>
+<p>8.	Choose a region and zone appropriate for the lab and budget.</p>
+<p>9.	Select an Ubuntu LTS image, a suitable small machine type and boot disk size.</p>
+<p>10.	Configure network access and create the VM.</p>
+
+  <div class="figure-box">
+    <img src="screenshots/p4_ss3_gcp_vm.png" alt="Compute Engine VM configuration showing name, zone, machine type and external IP." />
+    <div class="figure-caption">Figure 20: Compute Engine VM configuration showing name, zone, machine type and external IP.</div>
+  </div>
+
+<p>VM configuration showing name, region, machine type and boot disk.</p>
+<h3 class="step-title">Step 4 — Configure the firewall</h3>
+<p>11.	Open VPC network → Firewall and create an ingress firewall rule.</p>
+<p>12.	Name it allow-ml-app-5000 and select the VPC network used by the VM.</p>
+<p>13.	Set the intended target VM or network tag and allow TCP port 5000.</p>
+<p>14.	Use a trusted client IP range when possible. If public access is required for the assignment, 0.0.0.0/0 permits all IPv4 sources.</p>
+<p>Ensure the rule applies to the intended VM. Avoid exposing administrative ports unnecessarily.</p>
+
+  <div class="figure-box">
+    <img src="screenshots/p4_ss4_gcp_firewall.png" alt="GCP firewall rule showing TCP port 5000 and configured 0.0.0.0/0 source range." />
+    <div class="figure-caption">Figure 21: GCP firewall rule showing TCP port 5000 and configured 0.0.0.0/0 source range.</div>
+  </div>
+
+<p>GCP firewall rule showing TCP port 5000 and the configured source range.</p>
+<h3 class="step-title">Step 5 — Connect using SSH</h3>
+<p>15.	Return to Compute Engine → VM instances.</p>
+<p>16.	Wait until the VM is available and click SSH next to the VM.</p>
+<p>17.	Wait for the browser-based terminal to connect.</p>
+
+  <div class="figure-box">
+    <img src="screenshots/p4_ss5_gcp_ssh.png" alt="SSH terminal connected to the GCP VM instance." />
+    <div class="figure-caption">Figure 22: SSH terminal connected to the GCP VM instance.</div>
+  </div>
+
+<p>Browser-based SSH terminal connected to the GCP VM.</p>
+<h3 class="step-title">Step 6 — Check\Install and Login Docker</h3>
+<div class="code-box"><code>sudo apt update</code></div>
+<div class="code-box"><code>sudo docker --version</code></div>
+<div class="code-box"><code>sudo docker info</code></div>
+<div class="code-box"><code>docker login -u <your_username></code></div>
+<p>If not installed;</p>
+<div class="code-box"><code>sudo apt install -y docker.io</code></div>
+<div class="code-box"><code>sudo systemctl enable --now docker</code></div>
+
+  <div class="figure-box">
+    <img src="screenshots/p4_ss6_gcp_docker_install.png" alt="Docker installation and daemon verified on GCP VM." />
+    <div class="figure-caption">Figure 23: Docker installation and daemon verified on GCP VM.</div>
+  </div>
+
+<p>Docker installation verified on the GCP VM.</p>
+<h3 class="step-title">Step 7 — Transfer and import the image</h3>
+<p>Save the Docker image locally, then use Google Cloud CLI. Install and authenticate gcloud locally if necessary.</p>
+<div class="code-box"><code>gcloud compute scp <files>\</code></div>
+<p><VM_Name>:~/ \</p>
+<p>--zone=YOUR_VM_ZONE \</p>
+<p>--project=YOUR_GCP_PROJECT_ID</p>
+<p># Run in the VM's SSH terminal</p>
+<p>Replace YOUR_VM_ZONE and YOUR_GCP_PROJECT_ID with actual values. Artifact Registry is an alternative for repeated releases.</p>
+
+  <div class="figure-box">
+    <img src="screenshots/p4_ss7_gcp_docker_import.png" alt="Project files and Docker environment imported on GCP VM." />
+    <div class="figure-caption">Figure 24: Project files and Docker environment imported on GCP VM.</div>
+  </div>
+
+<p>Docker image imported on the GCP VM.</p>
+<h3 class="step-title">Step 8 — Build Image and Run the container</h3>
+<div class="code-box"><code>sudo docker build -t <tag>:1.0</code></div>
+<div class="code-box"><code>sudo docker images</code></div>
+<div class="code-box"><code>sudo docker run -d \</code></div>
+<p>--name <name>\</p>
+<p>--restart unless-stopped \</p>
+<p>-p 5000:5000 \</p>
+<p><tag>:1.0</p>
+<div class="code-box"><code>sudo docker ps</code></div>
+<div class="code-box"><code>sudo docker logs <name></code></div>
+
+  <div class="figure-box">
+    <img src="screenshots/p4_ss8_gcp_docker_run.png" alt="Running application container on GCP Compute Engine VM." />
+    <div class="figure-caption">Figure 25: Running application container on GCP Compute Engine VM.</div>
+  </div>
+
+<p>Running application container on GCP.</p>
+<h3 class="step-title">Step 9 — Verify the application</h3>
+<p>Copy the VM external IPv4 address and open http://YOUR_GCP_EXTERNAL_IP:5000 and http://YOUR_GCP_EXTERNAL_IP:5000/health. Test a prediction. If the page fails, verify the external IP, firewall rule, container status and logs.</p>
+
+  <div class="figure-box">
+    <img src="screenshots/p4_ss9_gcp_verify.png" alt="ML application opened and verified using GCP external IP." />
+    <div class="figure-caption">Figure 26: ML application opened and verified using GCP external IP.</div>
+  </div>
+
+<p>ML application opened using the GCP external IP.</p>
+
+  <div class="figure-box">
+    <img src="screenshots/p4_ss10_gcp_predict.png" alt="Successful prediction response through GCP deployment." />
+    <div class="figure-caption">Figure 27: Successful prediction response through GCP deployment.</div>
+  </div>
+
+<p>Successful prediction through the GCP deployment.</p>
+
+</div>
+</body>
+</html>

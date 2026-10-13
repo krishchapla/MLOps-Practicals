@@ -1,0 +1,14 @@
+venv/
+.venv/
+__pycache__/
+*.py[cod]
+*.pyo
+.pytest_cache/
+.env
+*.pem
+*.key
+.ipynb_checkpoints/
+*.ipynb
+.DS_Store
+test_render.py
+generate_terminal_screenshots.py
