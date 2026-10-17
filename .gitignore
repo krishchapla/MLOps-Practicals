@@ -12,3 +12,5 @@ __pycache__/
 .DS_Store
 test_render.py
 generate_terminal_screenshots.py
+generate_all_screenshots.py
+*.bak
