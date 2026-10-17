@@ -6,12 +6,12 @@
 [![Docker](https://img.shields.io/badge/Docker-Ready-2496ED?style=flat&logo=docker&logoColor=white)](https://www.docker.com/)
 [![AWS](https://img.shields.io/badge/AWS-EC2-FF9900?style=flat&logo=amazon-aws&logoColor=white)](https://aws.amazon.com/ec2/)
 [![GCP](https://img.shields.io/badge/GCP-Compute%20Engine-4285F4?style=flat&logo=google-cloud&logoColor=white)](https://cloud.google.com/compute)
-[![GCP Live](https://img.shields.io/badge/GCP%20Live-http%3A%2F%2F34.55.203.1%3A5000-4285F4?style=flat&logo=google-cloud&logoColor=white)](http://34.55.203.1:5000)
+[![GCP Live](https://img.shields.io/badge/GCP%20Live-http%3A%2F%2F34.55.203.1-4285F4?style=flat&logo=google-cloud&logoColor=white)](http://34.55.203.1)
 [![Pytest](https://img.shields.io/badge/Tests-9%20Passed-4EAA25?style=flat&logo=pytest&logoColor=white)](https://pytest.org/)
 
 An enterprise-ready, modular Machine Learning Operations (MLOps) pipeline that converts a Jupyter Notebook machine learning model into a production-grade Flask web application and REST API, containerized with Docker, and architected for cloud deployment on AWS EC2 and Google Cloud Platform.
 
-> 🌐 **Live GCP Deployment Link**: **[http://34.55.203.1:5000](http://34.55.203.1:5000)** | Health Check: **[http://34.55.203.1:5000/health](http://34.55.203.1:5000/health)** | Submission link file: [`link.gcp`](link.gcp)
+> 🌐 **Live GCP Deployment Link**: **[http://34.55.203.1](http://34.55.203.1)** | Health Check: **[http://34.55.203.1/health](http://34.55.203.1/health)** | Submission link file: [`link.gcp`](link.gcp)
 
 ---
 
@@ -202,28 +202,28 @@ docker logs student-marks-app
    ```bash
    gcloud compute ssh mlops-vm --zone=us-central1-a
    ```
-4. Deploy and start Docker container:
+4. Deploy and start Docker container (bound to host port 80):
    ```bash
-   sudo docker run -d --name student-marks-gcp --restart unless-stopped -p 5000:5000 student-marks:1.0
+   sudo docker run -d --name student-marks-app --restart unless-stopped -p 80:5000 student-marks:1.0
    ```
 5. **Live Deployed Web Application & Endpoints**:
-   - 🌐 **Web Interface**: [http://34.55.203.1:5000](http://34.55.203.1:5000)
-   - 💓 **Health Check Endpoint**: [http://34.55.203.1:5000/health](http://34.55.203.1:5000/health)
-   - 🎯 **REST Prediction API**: `http://34.55.203.1:5000/api/predict`
+   - 🌐 **Web Interface**: [http://34.55.203.1](http://34.55.203.1)
+   - 💓 **Health Check Endpoint**: [http://34.55.203.1/health](http://34.55.203.1/health)
+   - 🎯 **REST Prediction API**: `POST http://34.55.203.1/api/predict`
    - 📄 **Submission URL File**: [`link.gcp`](link.gcp)
 
    *Remote Verification:*
    ```bash
    # Check HTTP status
-   curl -I http://34.55.203.1:5000/
+   curl -I http://34.55.203.1/
 
    # Health Check
-   curl http://34.55.203.1:5000/health
+   curl http://34.55.203.1/health
 
    # Test Prediction via REST API
-   curl -X POST http://34.55.203.1:5000/api/predict \
+   curl -X POST http://34.55.203.1/api/predict \
      -H "Content-Type: application/json" \
-     -d '{"hours_studied": 9.0, "previous_scores": 92, "extracurricular": 1, "sleep_hours": 8, "sample_papers_practiced": 7}'
+     -d '{"hours_studied": 7.5, "previous_scores": 85, "extracurricular": 1, "sleep_hours": 8, "practice_papers": 5}'
    ```
 
 ---
